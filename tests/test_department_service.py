@@ -1,4 +1,3 @@
-"""Тесты сервиса департаментов — unit тесты с моками."""
 import pytest
 from unittest.mock import AsyncMock
 
@@ -8,6 +7,7 @@ from src.services.exceptions import (
     DepartmentNotFoundError,
     DepartmentNameConflictError,
     DepartmentCycleError,
+    InvalidDateError,
     ReassignTargetRequiredError,
     ReassignTargetNotFoundError,
 )

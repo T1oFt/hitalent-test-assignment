@@ -22,5 +22,13 @@ services:
     depends_on:
       postgres_test:
         condition: service_healthy
+    volumes:
+      - ./coverage-report:/app/coverage-report
+      - ./test-reports:/app/test-reports
     command: >
-      sh -c "pytest tests/ -v"
+      sh -c "pytest tests/ -v --tb=short
+      --cov=src
+      --cov-report=html:/app/coverage-report
+      --cov-report=term-missing
+      --html=/app/test-reports/report.html
+      --self-contained-html"

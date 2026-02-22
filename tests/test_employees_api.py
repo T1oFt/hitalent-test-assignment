@@ -8,14 +8,14 @@ from tests.conftest import create_mock_employee
 
 
 class TestCreateEmployeeAPI:
-    """Tests for POST /api/v1/departments/{id}/employees/ endpoint."""
+    """Тесты для POST /api/v1/departments/{id}/employees/ эндпоинта."""
 
     @pytest.mark.asyncio
     async def test_create_employee_success(
         self,
         client,
     ):
-        """Test successful employee creation."""
+        """Тест: успешное создание сотрудника."""
         created = create_mock_employee(id=1, department_id=1)
         created.hired_at = None
         created.created_at = datetime(2024, 1, 1, 0, 0, 0)
@@ -40,7 +40,7 @@ class TestCreateEmployeeAPI:
         self,
         client,
     ):
-        """Test empty full_name is rejected."""
+        """Тест: пустое full_name отклоняется."""
         response = await client.post(
             "/api/v1/departments/1/employees/",
             json={"full_name": "", "position": "Developer"},
@@ -53,7 +53,7 @@ class TestCreateEmployeeAPI:
         self,
         client,
     ):
-        """Test empty position is rejected."""
+        """Тест: пустая позиция отклоняется."""
         response = await client.post(
             "/api/v1/departments/1/employees/",
             json={"full_name": "John Doe", "position": ""},
@@ -66,7 +66,7 @@ class TestCreateEmployeeAPI:
         self,
         client,
     ):
-        """Test missing required fields is rejected."""
+        """Тест: отсутствие обязательных полей отклоняется."""
         response = await client.post(
             "/api/v1/departments/1/employees/",
             json={},
@@ -79,7 +79,7 @@ class TestCreateEmployeeAPI:
         self,
         client,
     ):
-        """Test full_name > 200 chars is rejected."""
+        """Тест: full_name > 200 символов отклоняется."""
         response = await client.post(
             "/api/v1/departments/1/employees/",
             json={"full_name": "A" * 201, "position": "Developer"},
@@ -92,7 +92,7 @@ class TestCreateEmployeeAPI:
         self,
         client,
     ):
-        """Test position > 200 chars is rejected."""
+        """Тест: позиция > 200 символов отклоняется."""
         response = await client.post(
             "/api/v1/departments/1/employees/",
             json={"full_name": "John", "position": "B" * 201},
@@ -105,7 +105,7 @@ class TestCreateEmployeeAPI:
         self,
         client,
     ):
-        """Test 404 response for non-existent department."""
+        """Тест: 404 ответ для несуществующего департамента."""
         with patch(
             "src.services.employee_service.EmployeeService.create_employee",
             side_effect=DepartmentNotFoundError(department_id=999),
@@ -123,7 +123,7 @@ class TestCreateEmployeeAPI:
         self,
         client,
     ):
-        """Test employee creation with hired_at date."""
+        """Тест: создание сотрудника с hired_at датой."""
         created = create_mock_employee(id=1, department_id=1)
         created.hired_at = "2024-01-15"
         created.created_at = datetime(2024, 1, 1, 0, 0, 0)

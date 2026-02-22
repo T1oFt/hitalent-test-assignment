@@ -1,4 +1,3 @@
-"""Тесты сервиса сотрудников — unit тесты с моками."""
 import pytest
 from unittest.mock import AsyncMock
 

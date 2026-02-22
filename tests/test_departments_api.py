@@ -14,7 +14,7 @@ from tests.conftest import create_mock_department
 
 
 class TestCreateDepartmentAPI:
-    """Tests for POST /api/v1/departments/ endpoint."""
+    """Тесты для POST /api/v1/departments/ эндпоинта."""
 
     @pytest.mark.asyncio
     async def test_create_department_success(
@@ -22,7 +22,7 @@ class TestCreateDepartmentAPI:
         client,
         mock_department_service: AsyncMock,
     ):
-        """Test successful department creation."""
+        """Тест: успешное создание департамента."""
         created = create_mock_department(id=1, name="Test", parent_id=None)
         created.created_at = datetime(2024, 1, 1, 0, 0, 0)
         mock_department_service.create_department = AsyncMock(return_value=created)
@@ -46,7 +46,7 @@ class TestCreateDepartmentAPI:
         self,
         client,
     ):
-        """Test that empty name is rejected by Pydantic validation."""
+        """Тест: пустое имя отклоняется валидацией Pydantic."""
         response = await client.post(
             "/api/v1/departments/",
             json={"name": "", "parent_id": None},
@@ -59,7 +59,7 @@ class TestCreateDepartmentAPI:
         self,
         client,
     ):
-        """Test that missing name is rejected."""
+        """Тест: отсутствие имени отклоняется."""
         response = await client.post(
             "/api/v1/departments/",
             json={"parent_id": None},
@@ -72,7 +72,7 @@ class TestCreateDepartmentAPI:
         self,
         client,
     ):
-        """Test that name > 200 chars is rejected."""
+        """Тест: имя > 200 символов отклоняется."""
         response = await client.post(
             "/api/v1/departments/",
             json={"name": "A" * 201, "parent_id": None},
@@ -85,7 +85,7 @@ class TestCreateDepartmentAPI:
         self,
         client,
     ):
-        """Test 409 response for name conflict."""
+        """Тест: 409 ответ при конфликте имён."""
         with patch(
             "src.services.department_service.DepartmentService.create_department",
             side_effect=DepartmentNameConflictError(parent_id=None),
@@ -103,7 +103,7 @@ class TestCreateDepartmentAPI:
         self,
         client,
     ):
-        """Test 404 response for non-existent parent."""
+        """Тест: 404 ответ для несуществующего родителя."""
         with patch(
             "src.services.department_service.DepartmentService.create_department",
             side_effect=DepartmentNotFoundError(department_id=999),
@@ -117,14 +117,14 @@ class TestCreateDepartmentAPI:
 
 
 class TestGetDepartmentAPI:
-    """Tests for GET /api/v1/departments/{id} endpoint."""
+    """Тесты для GET /api/v1/departments/{id} эндпоинта."""
 
     @pytest.mark.asyncio
     async def test_get_department_success(
         self,
         client,
     ):
-        """Test successful department retrieval."""
+        """Тест: успешное получение департамента."""
         tree_data = {
             "id": 1,
             "name": "Test",
@@ -151,7 +151,7 @@ class TestGetDepartmentAPI:
         self,
         client,
     ):
-        """Test depth < 1 is rejected."""
+        """Тест: depth < 1 отклоняется."""
         response = await client.get("/api/v1/departments/1?depth=0")
 
         assert response.status_code == 422
@@ -161,7 +161,7 @@ class TestGetDepartmentAPI:
         self,
         client,
     ):
-        """Test depth > 5 is rejected."""
+        """Тест: depth > 5 отклоняется."""
         response = await client.get("/api/v1/departments/1?depth=6")
 
         assert response.status_code == 422
@@ -171,7 +171,7 @@ class TestGetDepartmentAPI:
         self,
         client,
     ):
-        """Test 404 response for non-existent department."""
+        """Тест: 404 ответ для несуществующего департамента."""
         with patch(
             "src.services.department_service.DepartmentService.get_department",
             side_effect=DepartmentNotFoundError(department_id=999),
@@ -185,7 +185,7 @@ class TestGetDepartmentAPI:
         self,
         client,
     ):
-        """Test depth and include_employees params are passed."""
+        """Тест: параметры depth и include_employees передаются."""
         tree_data = {
             "id": 1,
             "name": "Test",
@@ -210,14 +210,14 @@ class TestGetDepartmentAPI:
 
 
 class TestUpdateDepartmentAPI:
-    """Tests for PATCH /api/v1/departments/{id} endpoint."""
+    """Тесты для PATCH /api/v1/departments/{id} эндпоинта."""
 
     @pytest.mark.asyncio
     async def test_update_department_name_success(
         self,
         client,
     ):
-        """Test successful name update."""
+        """Тест: успешное обновление имени."""
         updated = create_mock_department(id=1, name="New Name", parent_id=None)
         updated.created_at = datetime(2024, 1, 1, 0, 0, 0)
 
@@ -239,7 +239,7 @@ class TestUpdateDepartmentAPI:
         self,
         client,
     ):
-        """Test 400 response for cycle detection."""
+        """Тест: 400 ответ при обнаружении цикла."""
         with patch(
             "src.services.department_service.DepartmentService.update_department",
             side_effect=DepartmentCycleError(),
@@ -257,7 +257,7 @@ class TestUpdateDepartmentAPI:
         self,
         client,
     ):
-        """Test 409 response for name conflict."""
+        """Тест: 409 ответ при конфликте имён."""
         with patch(
             "src.services.department_service.DepartmentService.update_department",
             side_effect=DepartmentNameConflictError(parent_id=None),
@@ -274,7 +274,7 @@ class TestUpdateDepartmentAPI:
         self,
         client,
     ):
-        """Test 404 response for non-existent department."""
+        """Тест: 404 ответ для несуществующего департамента."""
         with patch(
             "src.services.department_service.DepartmentService.update_department",
             side_effect=DepartmentNotFoundError(department_id=999),
@@ -291,7 +291,7 @@ class TestUpdateDepartmentAPI:
         self,
         client,
     ):
-        """Test that empty name is rejected."""
+        """Тест: пустое имя отклоняется."""
         response = await client.patch(
             "/api/v1/departments/1",
             json={"name": ""},
@@ -304,7 +304,7 @@ class TestUpdateDepartmentAPI:
         self,
         client,
     ):
-        """Test empty body is allowed (no-op update)."""
+        """Тест: пустое тело разрешено (без изменений)."""
         updated = create_mock_department(id=1, name="Test", parent_id=None)
         updated.created_at = datetime(2024, 1, 1, 0, 0, 0)
 
@@ -318,14 +318,14 @@ class TestUpdateDepartmentAPI:
 
 
 class TestDeleteDepartmentAPI:
-    """Tests for DELETE /api/v1/departments/{id} endpoint."""
+    """Тесты для DELETE /api/v1/departments/{id} эндпоинта."""
 
     @pytest.mark.asyncio
     async def test_delete_department_cascade_mode(
         self,
         client,
     ):
-        """Test cascade delete returns 204."""
+        """Тест: cascade удаление возвращает 204."""
         with patch(
             "src.services.department_service.DepartmentService.delete_department",
             return_value=True,
@@ -339,7 +339,7 @@ class TestDeleteDepartmentAPI:
         self,
         client,
     ):
-        """Test reassign delete with target."""
+        """Тест: reassign удаление с target."""
         with patch(
             "src.services.department_service.DepartmentService.delete_department",
             return_value=True,
@@ -355,7 +355,7 @@ class TestDeleteDepartmentAPI:
         self,
         client,
     ):
-        """Test 404 response for non-existent department."""
+        """Тест: 404 ответ для несуществующего департамента."""
         with patch(
             "src.services.department_service.DepartmentService.delete_department",
             side_effect=DepartmentNotFoundError(department_id=999),
@@ -369,7 +369,7 @@ class TestDeleteDepartmentAPI:
         self,
         client,
     ):
-        """Test 400 when reassign_to_department_id is missing."""
+        """Тест: 400 когда reassign_to_department_id отсутствует."""
         with patch(
             "src.services.department_service.DepartmentService.delete_department",
             side_effect=ReassignTargetRequiredError(),
@@ -383,7 +383,7 @@ class TestDeleteDepartmentAPI:
         self,
         client,
     ):
-        """Test 404 when reassign target doesn't exist."""
+        """Тест: 404 когда target для reassign не существует."""
         with patch(
             "src.services.department_service.DepartmentService.delete_department",
             side_effect=ReassignTargetNotFoundError(department_id=999),
@@ -399,7 +399,7 @@ class TestDeleteDepartmentAPI:
         self,
         client,
     ):
-        """Test invalid mode is rejected."""
+        """Тест: невалидный mode отклоняется."""
         response = await client.delete("/api/v1/departments/1?mode=invalid")
 
         assert response.status_code == 422
